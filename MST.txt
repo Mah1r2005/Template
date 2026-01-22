@@ -1,0 +1,73 @@
+int N;
+vector<int>father;
+vector<int>sizes;
+ 
+ 
+void init() {
+    for (int i = 0; i < N; ++i) {
+        father[i] = i;
+    }
+}
+ 
+int find(int node) {
+    if (father[node] == node) {
+        return node;
+    }
+    return find(father[node]);
+}
+ 
+void unite(int A, int B) {
+    int a = find(A);
+    int b = find(B);
+    
+    if(a!=b){
+        if (sizes[a] < sizes[b]) swap(a,b);
+        sizes[a] += sizes[b];
+        father[b] = a;   
+    }
+}
+ 
+
+
+struct Edge {
+    int u, v, weight;
+    bool operator<(Edge const& other) {
+        return weight < other.weight;
+    }
+};
+
+
+cin>>N;
+ father.assign(N,0);
+ sizes.assign(N,1);
+ init();
+ vector<Edge> edges,result;
+ int m;
+ cin>>m;
+ while(m--){
+    int a,b,c;
+    cin>>a>>b>>c;
+    a--;
+    b--;
+    edges.push_back({a,b,c});
+ }
+ 
+ sort(edges.begin(),edges.end());
+ for(auto e: edges){
+    if(find(e.u)!=find(e.v)){
+        result.push_back(e);
+        unite(e.u,e.v);
+    }
+ }
+ 
+ set<int>cnt;
+ for(int i=0; i<N; i++) cnt.insert(find(i));
+ 
+ if(cnt.size()!=1) {cout<<"IMPOSSIBLE"; return 0;}
+ long long ans=0;
+ for(auto e: result){
+    ans+=e.weight;
+ }
+ 
+ cout<<ans<<"\n";
+
