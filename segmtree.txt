@@ -1,3 +1,6 @@
+
+//While passing segm, use reference. Copy takes more time as copy the whole array ->n;
+
 struct item{
  
 };
